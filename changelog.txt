@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.2.0
+Date: 09. 11. 2026
+  Features:
+    - Display an arrow near the player pointing in the direction of the vehicle.
+    - Added a per-player setting to toggle the direction arrow.
+---------------------------------------------------------------------------------------------------
 Version: 1.1.1
 Date: 26. 10. 2026
   Info:

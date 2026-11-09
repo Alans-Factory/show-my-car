@@ -33,5 +33,12 @@ data:extend({
     setting_type = "runtime-per-user",
     default_value = true,
     order = "e[other]"
+  },
+  {
+    type = "bool-setting",
+    name = "show-my-vehicle-show-arrow",
+    setting_type = "runtime-per-user",
+    default_value = true,
+    order = "f[arrow]"
   }
 })

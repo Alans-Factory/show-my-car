@@ -9,6 +9,18 @@ local function init_storage()
   storage.vehicles = storage.vehicles or storage.cars or {}
   storage.last_vehicles = storage.last_vehicles or storage.last_cars or {}
   storage.pinned_tick = storage.pinned_tick or {}
+  storage.arrows = storage.arrows or {}
+end
+
+local function clear_arrow(player_index)
+  if not storage.arrows then
+    return
+  end
+  local arrow = storage.arrows[player_index]
+  if arrow and arrow.valid then
+    arrow.destroy()
+  end
+  storage.arrows[player_index] = nil
 end
 
 local function clear_pin(player_index)
@@ -25,11 +37,20 @@ local function clear_pin(player_index)
   storage.markers[player_index] = nil
   storage.vehicles[player_index] = nil
   storage.pinned_tick[player_index] = nil
+  clear_arrow(player_index)
 end
 
 local function category_enabled(player, category)
   local setting = settings.get_player_settings(player)[rules.SETTING_BY_CATEGORY[category]]
   return setting and setting.value
+end
+
+local function arrow_enabled(player)
+  local setting = settings.get_player_settings(player)[rules.SETTING_SHOW_ARROW]
+  if setting == nil then
+    return true
+  end
+  return setting.value
 end
 
 local function vehicle_enabled(player, vehicle)
@@ -107,6 +128,69 @@ local function attach_pin(player, marker)
   return pin
 end
 
+local function player_target(player)
+  if player.vehicle and player.vehicle.valid then
+    return player.vehicle
+  end
+  if player.character and player.character.valid then
+    return player.character
+  end
+  return player.physical_position
+end
+
+local function attach_arrow(player, vehicle)
+  clear_arrow(player.index)
+  if not player or not vehicle or not vehicle.valid then
+    return nil
+  end
+  if not arrow_enabled(player) then
+    return nil
+  end
+  if player.physical_surface ~= vehicle.surface then
+    return nil
+  end
+
+  local target = player_target(player)
+  if not target then
+    return nil
+  end
+
+  local arrow = rendering.draw_sprite{
+    sprite = rules.ARROW_SPRITE,
+    surface = player.physical_surface,
+    target = target,
+    orientation_target = vehicle,
+    oriented_offset = rules.arrow_offset(),
+    render_layer = "entity-info-icon",
+    players = {player}
+  }
+  if arrow then
+    storage.arrows[player.index] = arrow
+  end
+  return arrow
+end
+
+local function update_arrow(player, vehicle)
+  if not player or not vehicle or not vehicle.valid or not arrow_enabled(player) then
+    clear_arrow(player.index)
+    return nil
+  end
+
+  if player.physical_surface ~= vehicle.surface then
+    clear_arrow(player.index)
+    return nil
+  end
+
+  local arrow = storage.arrows and storage.arrows[player.index]
+  if arrow and arrow.valid then
+    arrow.target = player_target(player)
+    arrow.orientation_target = vehicle
+    return arrow
+  end
+
+  return attach_arrow(player, vehicle)
+end
+
 local function pin_vehicle(player, vehicle)
   clear_pin(player.index)
 
@@ -118,6 +202,7 @@ local function pin_vehicle(player, vehicle)
   storage.vehicles[player.index] = vehicle
   storage.pinned_tick[player.index] = game.tick
   attach_pin(player, marker)
+  attach_arrow(player, vehicle)
   return true
 end
 
@@ -163,7 +248,10 @@ local function update_pin(player_index)
 
   if not move_marker(player, marker, vehicle) then
     clear_pin(player_index)
+    return
   end
+
+  update_arrow(player, vehicle)
 end
 
 script.on_init(init_storage)
@@ -190,6 +278,23 @@ script.on_event(defines.events.on_player_driving_changed_state, function(event)
   local current = player.vehicle
   if pinned and pinned.valid and current and current.valid and current == pinned then
     clear_pin(player.index)
+  elseif pinned and pinned.valid then
+    update_arrow(player, pinned)
+  end
+end)
+
+script.on_event(defines.events.on_runtime_mod_setting_changed, function(event)
+  if event.setting == rules.SETTING_SHOW_ARROW then
+    local player = game.get_player(event.player_index)
+    if player then
+      init_storage()
+      local pinned = storage.vehicles and storage.vehicles[player.index]
+      if pinned and pinned.valid then
+        update_arrow(player, pinned)
+      else
+        clear_arrow(player.index)
+      end
+    end
   end
 end)
 

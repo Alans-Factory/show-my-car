@@ -3,6 +3,9 @@ local rules = {}
 rules.ARRIVAL_DISTANCE = 10
 rules.ARRIVAL_DISTANCE_SQUARED = rules.ARRIVAL_DISTANCE * rules.ARRIVAL_DISTANCE
 rules.PIN_GRACE_TICKS = 60 * 10
+rules.ARROW_OFFSET_DISTANCE = 2
+rules.ARROW_SPRITE = "utility/indication_arrow"
+rules.SETTING_SHOW_ARROW = "show-my-vehicle-show-arrow"
 
 rules.SETTING_BY_CATEGORY = {
   car = "show-my-vehicle-include-car",
@@ -46,6 +49,10 @@ end
 
 function rules.grace_elapsed(current_tick, pinned_tick)
   return current_tick >= (pinned_tick or 0) + rules.PIN_GRACE_TICKS
+end
+
+function rules.arrow_offset(distance)
+  return {0, -(distance or rules.ARROW_OFFSET_DISTANCE)}
 end
 
 function rules.has_arrived(player_surface, player_position, vehicle_surface, vehicle_position)

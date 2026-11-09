@@ -119,4 +119,16 @@ for _, category in ipairs({"car", "tank", "spidertron", "train", "other"}) do
   check(rules.SETTING_BY_CATEGORY[category] ~= nil, "setting exists for " .. category)
 end
 
+eq(rules.ARROW_OFFSET_DISTANCE, 2, "arrow offset distance default is 2")
+eq(rules.ARROW_SPRITE, "utility/indication_arrow", "arrow sprite is utility/indication_arrow")
+eq(rules.SETTING_SHOW_ARROW, "show-my-vehicle-show-arrow", "show arrow setting name")
+
+local default_offset = rules.arrow_offset()
+eq(default_offset[1], 0, "default offset x is 0")
+eq(default_offset[2], -2, "default offset y is -2")
+
+local custom_offset = rules.arrow_offset(3.5)
+eq(custom_offset[1], 0, "custom offset x is 0")
+eq(custom_offset[2], -3.5, "custom offset y is -3.5")
+
 return {failures = failures, checks = checks}

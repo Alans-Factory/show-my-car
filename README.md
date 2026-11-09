@@ -1,6 +1,6 @@
 # Show my vehicle
 
-Ask for your vehicle and a pin appears on it. The pin stays on screen while you travel, follows the vehicle if it moves, and removes itself when you get in or when you arrive. You do not place a marker, and you do not clean anything up.
+Ask for your vehicle and a pin appears on it. An arrow also appears near your character pointing in the direction of the vehicle. The pin stays on screen while you travel, follows the vehicle if it moves, and removes itself when you get in or when you arrive. You do not place a marker, and you do not clean anything up.
 
 Each player has their own pin. Another player arriving at a vehicle, or getting into it, does not remove yours.
 
@@ -19,6 +19,7 @@ In **Settings → Mod settings → Per player**, turn each type on or off. Any c
 - **Spidertrons**, including other spider vehicles
 - **Trains**, locomotives and wagons
 - **Other vehicles**, including vehicles added by mods
+- **Direction arrow**, toggle the arrow pointing towards the pinned vehicle
 
 All five are on by default. A modded vehicle uses **Other vehicles**, even when it looks like a car or a tank.
 

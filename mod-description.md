@@ -1,6 +1,6 @@
 # Show my vehicle
 
-Ask for your vehicle and a pin appears on it. The pin follows the vehicle and removes itself when you get in or when you arrive. Each player has their own pin.
+Ask for your vehicle and a pin appears on it, along with an arrow near your character pointing in the direction of the vehicle. The pin follows the vehicle and removes itself when you get in or when you arrive. Each player has their own pin.
 
 Packaging, tests, and upload to the mod portal come from the mod template.
 
