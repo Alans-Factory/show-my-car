@@ -1,36 +1,61 @@
 # Show my vehicle
 
-Ask for your vehicle and a pin appears on it, along with an arrow near your character pointing in the direction of the vehicle. The pin follows the vehicle and removes itself when you get in or when you arrive. Each player has their own pin.
+Finding your parked car, tank, or spidertron should not be a chore. **Show my vehicle** locates your vehicle with a single keystroke: it places an on-screen pin on the vehicle and shows an arrow near your character pointing directly toward it.
 
-Packaging, tests, and upload to the mod portal come from the mod template.
+As you travel, the pin stays visible on screen (even when offscreen, showing the distance), and the arrow continuously tracks the vehicle's direction in real time. Once you arrive or get inside, everything disappears automatically — no markers to place, and no cleanup required!
 
-## What is included
+![Tracking an offscreen vehicle](https://raw.githubusercontent.com/AlanVncs/show-my-car/main/screenshots/vehicle-offscreen-46m.png)
 
-- `info.json`, `control.lua`, `data.lua`, `settings.lua`, `vehicle_rules.lua`, `changelog.txt`, locale files, and a thumbnail
-- `.modfiles`, the list of paths that go into the release zip
-- Unit tests that run outside the game, including the template's release-file checks and the pin rules
-- A GitHub Actions workflow that tests pull requests and, on `main`, checks the portal before tests and packaging
-- A project skill so an AI assistant can explain the layout, configure the portal key, and prepare a release
+---
 
-Factorio 2.1 is the version this mod targets. English and Brazilian Portuguese locales are included.
+## Features
 
-## Ready to use with AI
+- **Direction Arrow**: A directional arrow hovers near your character, continuously pointing straight toward the target vehicle so you always know which way to walk or drive.
+- **On-Screen Pin**: Places a persistent Factorio pin on the vehicle that stays visible on your screen, indicating its direction and distance when offscreen, and tracks it if it moves.
+- **Automatic Cleanup**: The pin and arrow remove themselves automatically:
+  - Immediately when you enter the target vehicle.
+  - After 10 seconds, once you are within 10 tiles of the vehicle.
+  - When the vehicle is destroyed or removed.
+- **Smart Target Selection**:
+  1. Targets the **last vehicle you drove** (if it still exists and its type is enabled).
+  2. If none was driven or it no longer exists, targets the **nearest enabled vehicle** on your current surface.
+- **Per-Player & Multiplayer Friendly**: Each player tracks their own vehicle independently. Another player approaching or entering a vehicle will never clear your pin.
+- **Fully Customizable**: Choose which vehicle categories you want to track, or toggle the direction arrow on and off.
 
-The skill at `.cursor/skills/factorio-mod-template/SKILL.md` is project guidance the assistant loads when you ask about the file layout or the portal key, or ask to publish or prepare a version.
+---
 
-The skill covers:
+## How to Use
 
-- The role of each file, including locale, changelog format, and `.modfiles`
-- How to create a Factorio API key and store it as the GitHub Actions secret `FACTORIO_API_KEY`
-- How to prepare a release: require a clean git tree, compare the repository with the last version on the mod portal, bump `info.json` and `changelog.txt`, and show a commit message
+1. Press **Shift + V**, or click the **Show my vehicle** shortcut (car icon) on your shortcut bar.
+2. A confirmation sound will play and the pin and direction arrow will appear pointing towards your vehicle.
+3. Walk or drive towards it. Once you arrive or get in, the pin and arrow clear themselves.
 
-The assistant does not stage, commit, or push until you confirm. Answering "yes" is the confirmation to finish the release.
+> **Tip**: You can customize the shortcut key anytime in **Settings → Controls → Mods → Show my vehicle**.
 
-## How this mod is set up
+![Vehicle marker and distance](https://raw.githubusercontent.com/AlanVncs/show-my-car/main/screenshots/vehicle-marker-24m.png)
 
-1. The internal name is `show-my-vehicle`, in `info.json`, in the locale files and their sections, and in the locale keys used by the scripts.
-2. The folder inside `mods/` is that internal name, or `show-my-vehicle_version`.
-3. Create an API key at [factorio.com/profile](https://factorio.com/profile) under **API Keys**. Store it in the GitHub repository as an Actions secret named `FACTORIO_API_KEY`.
-4. Push to `main`. The workflow checks the portal first. A version that is already published is left as it is, and the workflow succeeds without tests or packaging. Otherwise it runs the tests and, when they pass, uploads the zip to the portal.
+---
 
-A pattern in `.modfiles` that matches nothing stops the package step, so the zip only contains files you listed.
+## Vehicle Types & Settings
+
+In **Settings → Mod settings → Per player**, each player can independently toggle which types of vehicles can be targeted:
+
+- **Cars**: Vanilla cars.
+- **Tanks**: Vanilla tanks.
+- **Spidertrons**: Spidertrons and other spider vehicles.
+- **Trains**: Locomotives and cargo/fluid/artillery wagons.
+- **Other vehicles**: Modded vehicles or any drivable entity that is not in the categories above.
+- **Direction arrow**: Toggle the on-screen arrow that hovers near your character.
+
+All options are enabled by default.
+
+![Pinned vehicle](https://raw.githubusercontent.com/AlanVncs/show-my-car/main/screenshots/last-entered-car-21m.png)
+
+---
+
+## Notes & Compatibility
+
+- Designed for **Factorio 2.0+ / 2.1**.
+- Supports multiplayer: tracking is strictly per-player.
+- Vehicles on other surfaces (e.g. space platforms or other planets in Space Age) are never mixed with your current surface.
+- Feedback and bug reports are welcome on the mod portal discussions or on [GitHub](https://github.com/AlanVncs/show-my-car/issues).
